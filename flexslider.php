@@ -30,10 +30,6 @@ function cs_flexslider_slider() {
 	global $wpdb, $post, $cp_options;
 	if ( $featured = cp_get_featured_slider_ads() ) : ?>	
 		<?php $featured_number = count( $featured->posts ); 
-
-//if max-width > 960; .control_width = $featured_number / 4 * 100
-//if 768 < max-width < 960; .control_width = $feature_number / 4 * 100 + 25 
-//if max-width < 768; .control_width = 100
 			$cw = array();			
 			$cw['wide'] = $featured_number / 4 * 100;
 			$cw['mid'] = ($featured_number + 1) / 4 * 100;
@@ -59,12 +55,6 @@ function cs_flexslider_slider() {
 }
 </style>
 <div id="featured-slider" class="loading">
-<div>
-<?php
-$user_info = get_userdata(1);
-      //var_dump( $user_info );
-?>
-</div>
   <div id="container" class="cf">
     <div id="main" role="main">
     <div class="control-width">
