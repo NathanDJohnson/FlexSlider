@@ -119,11 +119,7 @@ function cs_flexslider_slider() {
       });
 })(jQuery);
 </script>
-<?php
-	wp_enqueue_script( 'flexslider', plugin_dir_url( __FILE__ ) . 'js/flexslider.js', array( 'flexslider-js' ) );
-?>
 <!-- end featured slider -->
-
 	<?php endif; ?>
     <?php wp_reset_query(); ?>
 <?php 
