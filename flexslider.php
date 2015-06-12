@@ -10,6 +10,17 @@ Author URI: http://atmoz.org/
 
 //include_once( plugin_dir_path( __FILE__ ). 'includes/options.php' );
 
+function cs_theme_exists() {
+	/**
+	 * This requires the use of the ClassiPress theme
+	 */
+	$my_theme = wp_get_theme();
+	if( $my_theme->get( 'Name' ) == 'ClassiPress' || $my_theme->get( 'Template' ) == 'classipress' ){
+		return true;
+	}
+	return false;
+}
+
 function cs_flexslider_enqueue() {
 	if( is_home() || is_front_page() || is_tax( array( APP_TAX_CAT, APP_TAX_TAG ) ) ) {
 
