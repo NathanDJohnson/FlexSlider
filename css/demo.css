@@ -1,14 +1,30 @@
 /* --Clearfix */
 .cf:before,
-.cf:after {content:""; display:table;}
-.cf:after {clear:both;}
-.cf {zoom:1;}
+.cf:after {
+	content:""; display:table;
+}
+.cf:after {
+	clear:both;
+}
+.cf {
+	zoom:1;
+}
 
-.slider { margin: 20px 0 10px!important;}
-#carousel li {margin-right: 5px;}
-#carousel img {display: block; opacity: .5; cursor: pointer;}
-#carousel img:hover {opacity: 1;}
-#carousel .flex-active-slide img {opacity: 1; cursor: default;}
+.slider { 
+	margin: 20px 0 10px!important;
+}
+#carousel li {
+	margin-right: 5px;
+}
+#carousel img {
+	display: block; opacity: .5; cursor: pointer;
+}
+#carousel img:hover {
+	opacity: 1;
+}
+#carousel .flex-active-slide img {
+	opacity: 1; cursor: default;
+}
 
 
 /* Loading
