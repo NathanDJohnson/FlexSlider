@@ -10,7 +10,7 @@ Author URI: http://atmoz.org/
 
 //include_once( plugin_dir_path( __FILE__ ). 'includes/options.php' );
 
-function cs_theme_exists() {
+function cpflex_theme_exists() {
 	/**
 	 * This requires the use of the ClassiPress theme
 	 */
@@ -21,7 +21,7 @@ function cs_theme_exists() {
 	return false;
 }
 
-function cs_flexslider_enqueue() {
+function cpflex_flexslider_enqueue() {
 	if( is_home() || is_front_page() || is_tax( array( APP_TAX_CAT, APP_TAX_TAG ) ) ) {
 
 		// Deregister jquery to avoid conflicts with jquery hosted on googleapis.com
@@ -34,9 +34,9 @@ function cs_flexslider_enqueue() {
 		wp_enqueue_script( 'g-jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js', array() );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'cs_flexslider_enqueue' );
+add_action( 'wp_enqueue_scripts', 'cpflex_flexslider_enqueue' );
 
-function cs_flexslider_slider() {
+function cpflex_flexslider_slider() {
 
 	global $wpdb, $post, $cp_options;
 	if ( $featured = cp_get_featured_slider_ads() ) : ?>	
@@ -139,7 +139,7 @@ function cs_flexslider_slider() {
 /**
  * Add custom image size
  */
-function bsc_featured_size() {
-  add_image_size( 'bsc_featured', 400, 300, true );
+function cpflex_featured_size() {
+  add_image_size( 'cpflex_featured', 400, 300, true );
 }
-add_action( 'after_setup_theme', 'bsc_featured_size' );
+add_action( 'after_setup_theme', 'cpflex_featured_size' );
