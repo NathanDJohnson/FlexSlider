@@ -68,29 +68,29 @@ function cpflex_flexslider_slider() {
 <div id="featured-slider" class="loading">
   <div id="container" class="cf">
     <div id="main" role="main">
-    <div class="control-width">
-      <section class="slides">
-        <div id="slider" class="flexslider carousel">
-          <ul class="slides photogrid">
-            <?php while ( $featured->have_posts() ) : $featured->the_post(); ?>
-            <li>
-              <a class="featured-header" href="<?php the_permalink(); ?>">
-                <h3 class="listing-header"><?php if ( mb_strlen( get_the_title() ) >= $cp_options->featured_trim ) echo mb_substr( get_the_title(), 0, $cp_options->featured_trim ).'...'; else the_title(); ?></h3>
-                <figure class="listing-content">
-                  <?php echo wp_get_attachment_image( cp_get_featured_image_id( get_the_ID() ), 'bsc_featured' ); ?>
-                  <figcaption><p><?php echo cp_get_content_preview( 350 ); ?></p></figcaption>
-                </figure>
-                <p class="tag">$<?php if ( is_numeric( get_post_meta($post->ID, 'cp_price', true) ) ) { echo number_format( get_post_meta($post->ID, 'cp_price', true) ); } ?></p>
-              </a>
-            </li>
-            <?php endwhile; ?>
-          </ul>
-        </div>
-      </section>
-    </div>
-    </div>
-  </div>
-</div>
+      <div id="cwidth" class="control-width">
+        <section class="slides">
+          <div id="slider" class="flexslider carousel">
+            <ul class="slides photogrid">
+              <?php while ( $featured->have_posts() ) : $featured->the_post(); ?>
+              <li>
+                <a class="featured-header" href="<?php the_permalink(); ?>">
+                  <h3 class="listing-header"><?php if ( mb_strlen( get_the_title() ) >= $cp_options->featured_trim ) echo mb_substr( get_the_title(), 0, $cp_options->featured_trim ).'...'; else the_title(); ?></h3>
+                  <figure class="listing-content">
+                    <?php echo wp_get_attachment_image( cp_get_featured_image_id( get_the_ID() ), 'bsc_featured' ); ?>
+                    <figcaption><p><?php echo cp_get_content_preview( 350 ); ?></p></figcaption>
+                  </figure>
+                  <p class="tag">$<?php if ( is_numeric( get_post_meta($post->ID, 'cp_price', true) ) ) { echo number_format( get_post_meta($post->ID, 'cp_price', true) ); } ?></p>
+                </a>
+              </li>
+              <?php endwhile; ?>
+            </ul>
+          </div> <!-- #slider -->
+        </section>
+      </div> <!-- #cwidth -->
+    </div> <!-- #main -->
+  </div> <!-- #container -->
+</div> <!-- #featured-slider -->
 <script type='text/javascript'>
 (function($) {
     // Inside of this function, $() will work as an alias for jQuery()
