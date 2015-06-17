@@ -340,3 +340,10 @@ html[xmlns] .flexslider .slides {
 	transition-delay: 100ms;
 	z-index: 100;
 }
+
+.flexslider .ellipsis {
+  overflow: hidden;
+  height: 2.1em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

@@ -77,7 +77,7 @@ function cpflex_flexslider_slider() {
               <?php while ( $featured->have_posts() ) : $featured->the_post(); ?>
               <li>
                 <a class="featured-header" href="<?php the_permalink(); ?>">
-                  <h3 class="listing-header"><?php if ( mb_strlen( get_the_title() ) >= $cp_options->featured_trim ) echo mb_substr( get_the_title(), 0, $cp_options->featured_trim ).'...'; else the_title(); ?></h3>
+                  <div class="ellipsis"><h3 class="listing-header"><?php if ( mb_strlen( get_the_title() ) >= $cp_options->featured_trim ) echo mb_substr( get_the_title(), 0, $cp_options->featured_trim ).'...'; else the_title(); ?></h3></div>
                   <figure class="listing-content">
                     <?php echo wp_get_attachment_image( cp_get_featured_image_id( get_the_ID() ), 'bsc_featured' ); ?>
                     <figcaption><p><?php echo cp_get_content_preview( 350 ); ?></p></figcaption>
