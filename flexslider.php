@@ -43,9 +43,9 @@ function cpflex_flexslider_slider() {
 	global $wpdb, $post, $cp_options;
 	if ( $featured = cp_get_featured_slider_ads() ) : ?>	
 		<?php $featured_number = count( $featured->posts ); 
-			$cw = array();			
-			$cw['wide'] = $featured_number / 4 * 100;
-			$cw['mid'] = ($featured_number + 1) / 4 * 100;
+			$cw = array();	
+			$cw['wide'] = min(100, $featured_number / 4 * 100 );
+			$cw['mid'] = min(100, ($featured_number + 1) / 4 * 100 );
 			$cw['small'] = 100;
 		?>
 
