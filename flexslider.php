@@ -81,10 +81,10 @@ function cpflex_flexslider_slider() {
                   	<h3 class="listing-header">
                   	<?php 
                   		if( function_exists('cpc_initial_caps') ){
-                  			$the_title = cpc_initial_caps( get_the_title() );
+                  			$the_title = cpc_initial_caps( esc_html(get_the_title() ) );
                   		}
                   		else{
-                  			$the_title = ucwords(strtolower(get_the_title()));
+                  			$the_title = ucwords( strtolower( esc_html( get_the_title() ) ) );
                   		}
                   		if ( mb_strlen( $the_title ) >= $cp_options->featured_trim ) {
                   			echo mb_substr( $the_title, 0, $cp_options->featured_trim ).'...'; }
