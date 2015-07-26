@@ -73,6 +73,7 @@ function cpflex_flexslider_slider() {
       <div id="cwidth" class="control-width">
         <section class="slides">
           <div id="slider" class="flexslider carousel">
+				<h2 class="featured-image-heading"><img src="<?php echo plugins_url(); ?>/flexslider/images/FeaturedListings.jpg" alt="Featured Listings"></h2>
             <ul class="slides photogrid">
               <?php while ( $featured->have_posts() ) : $featured->the_post(); ?>
               <li>
