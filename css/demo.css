@@ -116,6 +116,12 @@ a.featured-header {
 	height: auto;
 }
 
+/* Offsets image height */
+.flex-direction-nav a.flex-prev, 
+.flex-direction-nav a.flex-next {
+    margin-top: 20px;
+}
+
 /* Price tag
 ***********************/
 .tag {
