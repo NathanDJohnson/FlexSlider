@@ -3,13 +3,11 @@
 Plugin Name: FlexSlider
 Plugin URI: http://atmoz.org/flexslider/
 Description: Show large slider on the homepage.
-Version: 0.0.1
+Version: 0.1.0
 Author: Nathan Johnson
 Author URI: http://atmoz.org/
 */
-
-//include_once( plugin_dir_path( __FILE__ ). 'includes/options.php' );
-
+include_once( plugin_dir_path( __FILE__ ). 'includes/options.php' );
 function cpflex_theme_exists() {
 	/**
 	 * This requires the use of the ClassiPress theme
@@ -20,17 +18,13 @@ function cpflex_theme_exists() {
 	}
 	return false;
 }
-
 function cpflex_flexslider_enqueue() {
 	if ( cpflex_theme_exists() ) {
 		if( is_home() || is_front_page() || is_tax( array( APP_TAX_CAT, APP_TAX_TAG ) ) ) {
-
 			// Deregister jquery to avoid conflicts with jquery hosted on googleapis.com
 			wp_deregister_script('jquery');
-
 			wp_enqueue_style( 'flexslider-css', plugin_dir_url( __FILE__ ) . 'css/flexslider.css' );
 			wp_enqueue_style( 'classipress-slider-css', plugin_dir_url( __FILE__ ) . 'css/demo.css' );
-
 			wp_enqueue_script( 'g-jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js', array() );
 			wp_enqueue_script( 'flexslider-js', plugin_dir_url( __FILE__ ) . 'js/jquery.flexslider.js', array( 'g-jquery' ) );
 		}
@@ -39,16 +33,23 @@ function cpflex_flexslider_enqueue() {
 add_action( 'wp_enqueue_scripts', 'cpflex_flexslider_enqueue' );
 
 function cpflex_flexslider_slider() {
-
 	global $wpdb, $post, $cp_options;
-	if ( $featured = cp_get_featured_slider_ads() ) : ?>	
-		<?php $featured_number = count( $featured->posts ); 
+	if ( $featured = cp_get_featured_slider_ads() ) : ?>
+		<?php $featured_number = count( $featured->posts ); ?>
+	<?php endif; ?>
+	<?php
+		if( flexslider_option_callback( 'membership_group' ) ) {
+			$featured = flexslider_get_featured_slider_ads();
+			$featured_number = count( $featured );
+		}
+	?>
+	<?php if( $featured ) : ?>
+		<?php
 			$cw = array();	
 			$cw['wide'] = min(100, $featured_number / 4 * 100 );
 			$cw['mid'] = min(100, ($featured_number + 1) / 4 * 100 );
 			$cw['small'] = 100;
 		?>
-
 <!-- featured slider -->
 <style>
 @media only screen and (min-width:960px){
@@ -75,7 +76,8 @@ function cpflex_flexslider_slider() {
           <div id="slider" class="flexslider carousel">
 				<h2 class="featured-image-heading"><img src="<?php echo plugins_url(); ?>/flexslider/images/FeaturedListings.jpg" alt="Featured Listings"></h2>
             <ul class="slides photogrid">
-              <?php while ( $featured->have_posts() ) : $featured->the_post(); ?>
+            <?php foreach( $featured as $f ){ ?>
+              <?php while ( $f->have_posts() ) : $f->the_post(); ?>
               <li>
                 <a class="featured-header" href="<?php the_permalink(); ?>">
                   <div class="ellipsis">
@@ -103,6 +105,7 @@ function cpflex_flexslider_slider() {
                 </a>
               </li>
               <?php endwhile; ?>
+             <?php } ?>
             </ul>
           </div> <!-- #slider -->
         </section>
@@ -154,7 +157,6 @@ function cpflex_flexslider_slider() {
     <?php wp_reset_query(); ?>
 <?php 
 }
-
 /**
  * Add custom image size
  */
@@ -162,3 +164,118 @@ function cpflex_featured_size() {
   add_image_size( 'cpflex_featured', 400, 300, true );
 }
 add_action( 'after_setup_theme', 'cpflex_featured_size' );
+
+/**
+ * Function to get the featured slider ads
+ */
+function flexslider_get_featured_slider_ads(){
+	$featured_group = flexslider_option_callback( 'membership_group' );
+	$featured_users = flexslider_get_featured_memberships( $featured_group );
+	
+	if( $featured_users ){
+		shuffle( $featured_users );
+		$ads = array();
+		foreach( $featured_users as $user ){
+			if( $ad = flexslider_get_featured_ad_for_user( $user )){
+				$ads[] = $ad;
+			}
+		}
+	}
+	return $ads;
+}
+
+/**
+ * Determines if a featured user has a specified ad set 
+ */
+function flexslider_featured_ad_set( $user ) {
+	global $wpdb;
+	if( $featured_ad = get_the_author_meta( 'featured_ad', $user ) ){
+		$post = $wpdb->get_col( $wpdb->prepare( 
+			"
+			SELECT      `ID`
+			FROM        $wpdb->posts
+			WHERE       `post_author` = %s 
+			            AND `post_type` = 'ad_listing'
+			            AND `post_status` = 'publish'
+			            AND `post_title` = %s
+			",
+			$user,
+			$featured_ad
+		) );
+		if( $post ){
+			return $post;
+		}	
+	}
+	return false;
+}
+
+/**
+ * Returns a random featured ad for a given user.
+ * Unless a specific ad is specified and then it returns that one.
+*/
+function flexslider_get_featured_ad_for_user( $user ) {
+	if(!$user){
+		return;
+	}
+	$args = array(
+		'post_type' => APP_POST_TYPE,
+		'post_status' => 'publish',
+		'posts_per_page' => 1,
+		'orderby' => 'rand',
+		'author' => $user,
+		'no_found_rows' => true,
+		'suppress_filters' => false,
+	);
+	if( $featured_ad = flexslider_featured_ad_set( $user ) ){
+		$args['page_id'] = $featured_ad[0];
+	}
+	$featured = new WP_Query( $args );
+	
+	if ( ! $featured->have_posts() ) {
+		return false;
+	}
+	return $featured;
+}
+
+/**
+ * Helper function
+*/
+function flexslider_get_featured_memberships( $type ) {
+	global $wpdb;
+
+	// If ClassiPress More Memberships plugin is used
+	// This plugin introduces a different way to handle Memberships
+	if( function_exists('ukljuci_ad_limit_jms') ) {
+		$sql = "	SELECT  `ID` 
+					FROM  `$wpdb->posts` 
+					WHERE  `post_title` =  '$type'
+					LIMIT 1";
+		
+		$rows = $wpdb->get_results( $wpdb->prepare( $sql, '' ) );
+		foreach ( $rows as $row ) {
+			$pack_id = $row->ID;
+		}		
+	}
+	else {
+		// Since the plugin isn't installed, just use the default value
+		$pack_id = $type;
+	}
+
+	$args = array(
+			'meta_key' => 'active_membership_pack', 
+			'meta_value' => $pack_id,
+			'orderby' => 'display_name', 
+			'order' => 'ASC'
+		);
+
+	// The Query
+	$the_users = new WP_User_Query( $args );
+	$ID_list = array();
+	
+	if( $the_users->results ){
+		foreach( $the_users->results as $user){
+			$ID_list[] = $user->ID;
+		}
+	}
+	return $ID_list;
+}
