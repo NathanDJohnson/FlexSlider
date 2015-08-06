@@ -7,6 +7,7 @@ Version: 0.1.0
 Author: Nathan Johnson
 Author URI: http://atmoz.org/
 */
+
 include_once( plugin_dir_path( __FILE__ ). 'includes/options.php' );
 function cpflex_theme_exists() {
 	/**
@@ -18,6 +19,7 @@ function cpflex_theme_exists() {
 	}
 	return false;
 }
+
 function cpflex_flexslider_enqueue() {
 	if ( cpflex_theme_exists() ) {
 		if( is_home() || is_front_page() || is_tax( array( APP_TAX_CAT, APP_TAX_TAG ) ) ) {
@@ -70,6 +72,7 @@ function cpflex_flexslider_slider() {
 </style>
 <div id="featured-slider" class="loading">
   <div id="container" class="cf">
+
     <div id="main" role="main">
       <div id="cwidth" class="control-width">
         <section class="slides">
@@ -157,6 +160,7 @@ function cpflex_flexslider_slider() {
     <?php wp_reset_query(); ?>
 <?php 
 }
+
 /**
  * Add custom image size
  */
@@ -186,6 +190,8 @@ function flexslider_get_featured_slider_ads(){
 
 /**
  * Determines if a featured user has a specified ad set 
+ * Returns the ad ID IFF is it set as an option and is an active ad
+ * Otherwise returns false
  */
 function flexslider_featured_ad_set( $user ) {
 	global $wpdb;
@@ -204,7 +210,7 @@ function flexslider_featured_ad_set( $user ) {
 		) );
 		if( $post ){
 			return $post;
-		}	
+		}
 	}
 	return false;
 }
@@ -213,10 +219,12 @@ function flexslider_featured_ad_set( $user ) {
  * Returns a random featured ad for a given user.
  * Unless a specific ad is specified and then it returns that one.
 */
+
 function flexslider_get_featured_ad_for_user( $user ) {
 	if(!$user){
 		return;
 	}
+	
 	$args = array(
 		'post_type' => APP_POST_TYPE,
 		'post_status' => 'publish',
@@ -229,7 +237,7 @@ function flexslider_get_featured_ad_for_user( $user ) {
 	if( $featured_ad = flexslider_featured_ad_set( $user ) ){
 		$args['page_id'] = $featured_ad[0];
 	}
-	$featured = new WP_Query( $args );
+	$featured = new WP_Query( $args );	
 	
 	if ( ! $featured->have_posts() ) {
 		return false;
